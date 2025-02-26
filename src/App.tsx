@@ -1,10 +1,19 @@
 import { useReducer } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
 import Card from "./components/Card";
 import { counterReducer, initialState } from "./reducer";
 import { useUsers } from "./hooks/useUsers";
+import LoginForm from "./components/LoginForm";
+import Dashboard from "./pages/Dashboard";
+import { ReactNode } from "react";
+import { getUserToken } from "./utils/auth";
 
-const App: React.FC = () => {
+const PrivateRoute = ({ children }: { children: ReactNode }) => {
+  return getUserToken() ? children : <Navigate to="/" />;
+};
+
+const Home = () => {
   const [state, dispatch] = useReducer(counterReducer, initialState);
   const { users, loading, error } = useUsers();
 
@@ -28,6 +37,16 @@ const App: React.FC = () => {
 
       <Card title="Tarjeta de prueba" description="Este es un componente en TypeScript" />
     </div>
+  );
+};
+
+const App: React.FC = () => {
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={<LoginForm />} />
+      <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+    </Routes>
   );
 };
 

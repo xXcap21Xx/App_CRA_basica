@@ -13,5 +13,5 @@ export const removeUserToken = () => {
 };
 
 export const isAuthenticated = () => {
-    return !!getUserToken(); // Retorna true si hay un token guardado
+    return !!getUserToken();
 };
